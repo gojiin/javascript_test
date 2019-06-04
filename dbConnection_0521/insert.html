@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body>
+  제목 : <input type="text" id="inputBox1"><br>
+  내용 : <input type="text" id="inputBox2"><br>
+  작성자 : <input type="text" id="inputBox3"><br>
+  <input type="button" id="testBtn" value="입력"><br>
+  <span id="result"></span>
+</body>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<script type="text/javascript">
+  $("#testBtn").click(function() {
+    //inputBox들에 입력된 값을 변수처리해줌
+    var inputBox1 = $("#inputBox1").val()
+    var inputBox2 = $("#inputBox2").val()
+    var inputBox3 = $("#inputBox3").val()
+
+    $.ajax({
+      url: '/insert',
+      type:'POST', //post방식 쓸때만 타입 써줌
+      data: { //여기있는 data는 js파일에서 사용할거야
+        user : inputBox3,
+        title: inputBox1,
+        text: inputBox2
+      },
+      success: function(response) {
+        console.log(response)
+        location.href = "/form2";
+        }
+    });
+  });
+</script>
+
+</html>

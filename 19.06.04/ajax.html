@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body>
+  <input type="button" id="ajaxBtn" value="ajax">
+  <span id- ""></span>
+</body>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+  $("#ajaxBtn").click(function() {
+    $.ajax({
+      url: '/requestTest',
+      data: {},
+      success: function(res) {
+        console.log(res)
+        // location.href = "/requestTest";
+      }
+    });
+  });
+</script>
+
+</html>

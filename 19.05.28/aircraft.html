@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>항공기 입력페이지</title>
+</head>
+
+<body>
+  항공코드 / 항공기명 / 좌석수
+  <br><span id="flightPageArea"></span><br><br><br>
+  항공코드 : <input type="text" id="inputAircraftCode"><br>
+  항공기명 : <input type="text" id="inputAircraftName"><br>
+  좌석수 : <input type="text" id="inputSeat"><br>
+  <input type="button" id="enter" value="입력">
+  <input type="button" id="esc" value="취소">
+
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+  <script type="text/javascript">
+
+    function numberClick(number) {
+      $.ajax({
+        url: '/deleteAircraft',
+        data: {
+          number : number
+        },
+        success: function(response) {
+            location.href = "/aircraft";
+          }
+      });
+    }
+
+    $.ajax({
+      url: '/selectAircraft', //내가 .js파일에 넣은 주소명이야
+      data: {},
+      success: function(response) { //데이터가 정상적으로 들어오면 이렇게 응답할거야
+          $("#flightPageArea").html(""); //span 자리에 있는 값을 초기화해주는 역할
+          for (i = 0; i < response.length; i++) { //response가 배열의 딕셔너리 형식이니까 이렇게 포문을 돌리자
+            // var inputAircraftCode = response[i].aircraftCode
+            // var inputAircraftName = response[i].aircraftName
+            // var inputSeat = response[i].seats
+            var no = response[i].no
+            var print = `${response[i].aircraftCode} / ${response[i].aircraftName} / ${response[i].seats}
+            <input type="button" value="삭제" onclick="numberClick(${no})">
+            <br>`
+            $("#flightPageArea").append(print)
+            console.log(print)
+          };
+    }});
+
+    $("#enter").click(function() {
+      var inputAircraftCode = $("#inputAircraftCode").val()
+      var inputAircraftName = $("#inputAircraftName").val()
+      var inputSeat = $("#inputSeat").val()
+
+      console.log(inputAircraftCode)
+
+      $.ajax({
+        url: '/aircraftDB',
+        type : 'POST',
+        data: {
+          inputAircraftCode : inputAircraftCode,
+          inputAircraftName : inputAircraftName,
+          inputSeat : inputSeat
+        },
+        success: function(response) {
+          console.log(response)
+          location.href = "/aircraft";
+          }
+      });
+    });
+
+
+
+  </script>
+
+</body>
+
+</html>

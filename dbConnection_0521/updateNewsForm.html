@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    작성자 : <input type="text" id="inputBox3"><br>
+    제목 : <input type="text" id="inputBox1"><br>
+    내용 : <input type="text" id="inputBox2"><br>
+    <input type="button" id="testBtn" value="입력"><br>
+    <input type="button" id="backToListBtn" value="취소">
+  </body>
+
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+  <script type="text/javascript">
+
+    //inputBox들에 입력된 값을 변수처리해줌
+    var user = $("#inputBox3").val()
+    var title = $("#inputBox1").val()
+    var text = $("#inputBox2").val()
+    var no = location.href.split("?")[1]; //물음표로 나누어서 스플릿한 1번째 값 가져오기
+
+    $.ajax({
+      url: '/getInforForUpdateNews',
+      data: { //여기있는 data는 js파일에서 사용할거야
+        no : no
+      },
+      success: function(response) {
+        $("#inputBox3").val(response[0].user)
+        $("#inputBox1").val(response[0].title)
+        $("#inputBox2").val(response[0].text)
+        }
+    });
+
+    $("#testBtn").click(function() {
+      $.ajax({
+        url: '/changeOneNews',
+        type : 'POST',
+        data: { //여기있는 data는 js파일에서 사용할거야
+          no : no,
+          title : $("#inputBox1").val(),
+          text : $("#inputBox2").val(),
+          user : $("#inputBox3").val()
+        },
+        success: function(response) {
+          console.log(response)
+          location.href = "/form2";
+          }
+      });
+    });
+
+    $("#backToListBtn").click(function() {
+      location.href = "/form2"
+    });
+
+  </script>
+
+</html>

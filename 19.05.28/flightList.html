@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>항공편 리스트</title>
+</head>
+
+<body>
+  편명 / 항공기명 / 좌석수 / 출발지/ 목적지 / 출발시각 / 도착시각
+  <br><span id="flightListArea"></span><br><br><br>
+  <input type="button" id="inputFlightBtn" value="항공편입력">
+  <input type="button" id="inputAircraftBtn" value="항공기입력">
+</body>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+
+  $.ajax({
+    url: '/joinData', //내가 .js파일에 넣은 주소명이야
+    data: {},
+    success: function(response) { //데이터가 정상적으로 들어오면 이렇게 응답할거야
+        $("#flightListArea2").html(""); //span 자리에 있는 값을 초기화해주는 역할
+        for (i = 0; i < response.length; i++) { //response가 배열의 딕셔너리 형식이니까 이렇게 포문을 돌리자
+          var no = response[i].no
+          var print = `${response[i].flightName} / ${response[i].aircraftName} / ${response[i].seats} / ${response[i].departure} / ${response[i].arrival} / ${response[i].departTime} / ${response[i].arrivalTime}
+          <br>`
+          $("#flightListArea").append(print)
+          console.log(print)
+        };
+  }});
+
+  $("#inputFlightBtn").click(function() {
+    $.ajax({
+      url: '/aircraft',
+      data: {
+      },
+      success: function(response) {
+        console.log(response)
+        location.href = "/aircraft";
+        }
+    });
+  });
+
+  $("#inputAircraftBtn").click(function() {
+    $.ajax({
+      url: '/flightPage',
+      data: {
+      },
+      success: function(response) {
+        console.log(response)
+        location.href = "/flightPage";
+        }
+    });
+  });
+</script>
+
+</html>

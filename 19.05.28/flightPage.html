@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>항공편 입력페이지</title>
+  </head>
+
+  <body>
+    편명 / 항공코드 / 출발지 / 목적지 / 출발시각 / 도착시각
+    <br><span id="flightListArea2"></span><br><br><br>
+    편명 : <input type="text" id="flightName"><br>
+    항공코드 : <input type="text" id="aircraftCode"><br>
+    출발지 : <input type="text" id="departure"><br>
+    목적지 : <input type="text" id="arrival"><br>
+    출발시각 : <input type="text" id="departTime"><br>
+    도착시각 : <input type="text" id="arrivalTime"><br>
+    <input type="button" id="enter" value="입력">
+    <input type="button" id="esc" value="취소">
+  </body>
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script type="text/javascript">
+    function numberClick(number) {
+      $.ajax({
+        url: '/deleteFlight',
+        data: {
+          number : number
+        },
+        success: function(response) {
+            location.href = "/flightPage";
+          }
+      });
+    }
+
+    $.ajax({
+      url: '/selectFlight', //내가 .js파일에 넣은 주소명이야
+      data: {},
+      success: function(response) { //데이터가 정상적으로 들어오면 이렇게 응답할거야
+          $("#flightListArea2").html(""); //span 자리에 있는 값을 초기화해주는 역할
+          for (i = 0; i < response.length; i++) { //response가 배열의 딕셔너리 형식이니까 이렇게 포문을 돌리자
+            var no = response[i].no
+            var print = `${response[i].flightName} / ${response[i].aircraftCode} / ${response[i].departure} / ${response[i].arrival} / ${response[i].departTime} / ${response[i].arrivalTime}
+            <input type="button" value="삭제" onclick="numberClick(${no})">
+            <br>`
+            $("#flightListArea2").append(print)
+            console.log(print)
+          };
+    }});
+
+    $("#enter").click(function() {
+      var flightName = $("#flightName").val()
+      var aircraftCode = $("#aircraftCode").val()
+      var departure = $("#departure").val()
+      var arrival = $("#arrival").val()
+      var departTime = $("#departTime").val()
+      var arrivalTime = $("#arrivalTime").val()
+
+      // $("#flightListArea2").append(`${flightName} / ${aircraftCode} / ${departure} / ${arrival} / ${departTime} / ${arrivalTime} <br>`)
+      // console.log(flightName)
+
+      $.ajax({
+        url: '/flightDB',
+        type : 'POST',
+        data: { //여기있는 data는 js파일에서 사용할거야
+          flightName : $("#flightName").val(),
+          aircraftCode : $("#aircraftCode").val(),
+          departure : $("#departure").val(),
+          arrival : $("#arrival").val(),
+          departTime : $("#departTime").val(),
+          arrivalTime : $("#arrivalTime").val(),
+        },
+        success: function(response) {
+          console.log(response)
+          location.href = "/flightPage";
+          }
+      });
+    });
+
+  </script>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body>
+  <!-- <input type="button" id="testBtn" value="News"> -->
+  <input type="button" id="writeNewsBtn" value="글쓰기">
+  <input type="button" id="deleteBtn" value="전체삭제"><br><br>
+  <span id="result"></span>
+</body>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<script type="text/javascript">
+  function numberClick(number) {
+    $.ajax({
+      url: '/deleteOneNews',
+      data: {
+        number : number
+      },
+      success: function(response) {
+          location.href = "/form2";
+        }
+    });
+  }
+
+  function changeClick(no) {
+    location.href = `/updateNewsForm?${no}`
+        }
+
+  $.ajax({
+    url: '/newList', //내가 .js파일에 넣은 주소명이야
+    data: {},
+    success: function(response) { //데이터가 정상적으로 들어오면 이렇게 응답할거야
+        $("#result").html(""); //span 자리에 있는 값을 초기화해주는 역할
+        for (i = 0; i < response.length; i++) { //response가 배열의 딕셔너리 형식이니까 이렇게 포문을 돌리자
+          // var no = response[i].no
+          var no = response[i].no
+          var print = `작성자 : ${response[i].user} / 제목 : ${response[i].title} / 내용 : ${response[i].text}
+          <input type="button" value="삭제" onclick="numberClick(${no})">
+          <input type="button" value="수정" onclick="changeClick(${no})">
+          <br>` //타이틀과 내용만 가져올거니까 이렇게! 문법 잘 인지하기!
+          //둘 중에 하나만 사용
+          $("#result").append(print)
+          // $("#result").append(`${print}<br>`); //span자리에 뿌려줄거야. append는 +=과 같은거알지?
+          console.log(print)
+        };
+  }});
+
+
+  $("#writeNewsBtn").click(function() {
+    location.href = "/form3";
+  });
+
+  $("#deleteBtn").click(function() {
+    location.href = "/form4";
+  });
+</script>
+
+</html>
