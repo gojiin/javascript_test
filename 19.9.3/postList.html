@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<body>
+  <span id="postList"></span>
+  <br><br><input type="button" id="newPostBtn" value="글쓰기">
+</body>
+<script>
+  $.ajax({
+    url: '/getPost',
+    data: {
+    },
+    success: function(res) {
+      for (var i = 0; i < res.length; i++) {
+        var f = `${res[i].no} <a href="postLink?no=${res[i].no}"> ${res[i].title} </a> </br>`
+        $("#postList").append(f)
+      }
+    }
+  });
+
+  $("#newPostBtn").click(function(){
+    location.href = "/newPost";
+  })
+</script>
+
+</html>

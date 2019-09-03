@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<body>
+  제목 : <input type="text" id="titleBox"><br>
+  내용 : <textarea name="name" rows="8" cols="80" id="contentBox"></textarea><br><br><br>
+
+  <input type="button" id="newPostBtn" value="입력">
+  <input type="button" id="deleteBtn" value="취소">
+</body>
+
+<script>
+  $("#newPostBtn").click(function(){
+    var title = $("#titleBox").val()
+    var content =$("#contentBox").val()
+
+    $.ajax({
+      url: '/insert',
+      type: "post",
+      data: {
+        title: title,
+        content: content
+      },
+      success: function(res) {
+        alert("입력완료")
+      }
+    });
+  })
+
+  $("#deleteBtn").click(function(){
+    location.href = "/postList";
+  })
+</script>
+
+</html>

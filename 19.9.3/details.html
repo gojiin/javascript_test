@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<body>
+  제목 : <span id="title"></span><br>
+  내용 : <span id="content"></span><br><br><br>
+
+  <input type="button" id="modifyBtn" value="수정">
+  <input type="button" id="deleteBtn" value="삭제">
+  <input type="button" id="ListBtn" value="목록으로">
+
+</body>
+<script>
+  var no = location.href.split("=")[1];
+  console.log(no)
+  $.ajax({
+    url:`/postDetail`,
+    data:{
+      no:no
+    },
+    success:function(res) {
+      for(var i = 0; i < res.length; i++) {
+        $("#title").html(res[i].title)
+        $("#content").html(res[i].content)
+      }
+    }
+  })
+
+  $("#ListBtn").click(function() {
+    location.href = "/postList";
+  });
+
+  $("#modifyBtn").click(function() {
+
+    location.href = `/modify?no=${no}`
+  });
+
+  $("#deleteBtn").click(function() {
+    $.ajax({
+      url: '/delete',
+      data: {
+        no : no
+      },
+      success: function(res) {
+        location.href = "/postList";
+      }
+    });
+
+  });
+</script>
+
+</html>
