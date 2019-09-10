@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+
+  <title></title>
+</head>
+
+<body>
+  <span id="menu"></span><br><br>
+  <input type="button" id="drawBtn" value="그래프 그리기">
+  <input type="button" id="downloadBtn" value="엑셀 다운로드">
+  <br><div id="drawChart"></div>
+
+
+</body>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  var menu = [];
+  var day =["월요일", "화요일", "수요일", "목요일", "금요일"];
+
+  $.ajax({
+    url: `/getMenu`,
+    data: {
+      menu: menu
+    },
+    success: function(res) {
+      for(i=0; i < res.length; i++){
+        $("#menu").append("<br>")
+        var menuDetails = res[i];
+        $("#menu").append(day[i]+"<br>")
+        for(j=0; j < menuDetails.length; j++){
+          if(menuDetails[j] != ""){
+            $("#menu").append(menuDetails[j]);
+            var selectString = ""
+            selectString += `<select name="selectBox${i}">`;
+            for(k=0; k < 11; k++){
+              selectString += `<option>${k}</option>`
+            }
+            selectString += `</select>`
+            $("#menu").append(selectString+"<br>")
+          }
+        }
+      }
+    }
+  })
+
+  $("#drawBtn").click(function(){
+    var dailyAverage = [];
+
+    for(var i=0; i < 5; i++) {
+      var selectBoxDetail = $(`select[name="selectBox${i}"]`)
+      var selectBoxEachSum = 0;
+      // var avg = 0;
+
+      for(var j=0; j < selectBoxDetail.length; j++){
+        selectBoxEachSum += Number(selectBoxDetail[j].value)
+      }
+      // console.log(selectBoxEachSum)
+      var avg = selectBoxEachSum / selectBoxDetail.length;
+      dailyAverage.push(avg);
+    }
+    console.log(dailyAverage)
+    var arrForChart = [];
+
+    for(var i=0; i < dailyAverage.length; i++){
+      arrForChart.push([day[i], dailyAverage[i]])
+    }
+
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', '요일');
+          data.addColumn('number', '만족도');
+
+          data.addRows(arrForChart);
+
+          var options = {
+            hAxis: {
+              title: '요일'
+            },
+            vAxis: {
+              title: '만족도'
+            }
+          };
+
+          var chart = new google.visualization.LineChart(document.getElementById('drawChart'));
+
+          chart.draw(data, options);
+        }
+  });
+
+
+
+
+
+  // var arr = [
+  //   [1,2,3,4],
+  //   [11,12,13,14,15,16,17,18],
+  //   [21,22,23,24,25,26]
+  // ];
+  //
+  // for(i=0; i<arr.length; i++) {
+  //   console.log("=================")
+  //   for(j=0; j<arr[i].length; j++) {
+  //     console.log(arr[i][j])
+  //   }
+  // }
+
+</script>
+
+</html>
